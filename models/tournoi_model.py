@@ -1,24 +1,35 @@
 import json
 import os
 import datetime
-from config import MAX_TOURNOIS
+import re
 
 class Tournoi:
-    def __init__(self, index, nom, date_debut, date_fin):
+    def __init__(self, index, nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi, joueurs=None):
         self.index = index
         self.nom = nom
         self.date_debut = date_debut
         self.date_fin = date_fin
-        self.joueurs = []
+        self.nb_max_joueurs = nb_max_joueurs
+        self.nb_rondes = nb_rondes
+        self.type_tournoi = type_tournoi
+        self.joueurs = joueurs if joueurs is not None else []
+
     def ajouter_joueurs(self, joueurs):
         self.joueurs.extend(joueurs)
+
+    def supprimer_joueur(self, joueur):
+        if joueur in self.joueurs:
+            self.joueurs.remove(joueur)
+            print(f"Le joueur {joueur.nom} a été supprimé du tournoi {self.nom}.")
+        else:
+            print(f"Le joueur {joueur.nom} n'est pas inscrit dans ce tournoi.")
+
 class TournoiManager:
     MAX_TOURNOIS = 5
     FICHIER_JSON = "data/tournoi.json"
 
     def __init__(self):
         self.tournois = []
-        self.joueurs = []
         self.charger_tournois()
 
     def charger_tournois(self):
@@ -32,10 +43,10 @@ class TournoiManager:
             data = [self.convertir_tournoi_vers_dict(tournoi) for tournoi in self.tournois]
             json.dump(data, file, indent=4)
 
-    def ajouter_tournoi(self, nom, date_debut, date_fin):
+    def ajouter_tournoi(self, nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi):
         if len(self.tournois) < self.MAX_TOURNOIS:
             index = len(self.tournois) + 1  
-            nouveau_tournoi = Tournoi(index, nom, date_debut, date_fin)
+            nouveau_tournoi = Tournoi(index, nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi)
             self.tournois.append(nouveau_tournoi)
             self.sauvegarder_tournois()
             return True
@@ -51,48 +62,38 @@ class TournoiManager:
 
     def supprimer_tournoi(self, index):
         del self.tournois[index - 1]
-        for tournoi in self.tournois[index - 1:]:
-            tournoi.index -= 1
+        self.sauvegarder_tournois()
+
+    def supprimer_joueur_du_tournoi(self, tournoi_index, joueur):
+        tournoi = self.tournois[tournoi_index - 1]
+        tournoi.supprimer_joueur(joueur)
         self.sauvegarder_tournois()
 
     def ajouter_joueurs_au_tournoi(self, tournoi_index, joueurs):
         tournoi = self.tournois[tournoi_index - 1]
-        for joueur in joueurs:
-            if self.verifier_chevauchement_dates(joueur, tournoi):
-                print(f"Impossible pour le joueur {joueur.nom} de participer au tournoi {tournoi.nom}. Les périodes se chevauchent.")
-            else:
-                 tournoi.joueurs.append(joueur)
-        self.sauvegarder_tournois()  # Déplacement de l'indentation
+        tournoi.ajouter_joueurs(joueurs)
+        self.sauvegarder_tournois()
 
-    def verifier_chevauchement_dates(self, joueur, tournoi):
-        for tournoi_existant in self.tournois:
-            if tournoi_existant != tournoi and joueur in tournoi_existant.joueurs:
-                if tournoi_existant.date_debut <= tournoi.date_fin and tournoi_existant.date_fin >= tournoi.date_debut:
-                    return True
-        return False
-    def convertir_tournoi_vers_dict(self, tournoi):
-        return {
-            'index': tournoi.index,
-            'nom': tournoi.nom,
-            'date_debut': tournoi.date_debut.isoformat() if isinstance(tournoi.date_debut, datetime.date) else tournoi.date_debut,
-            'date_fin': tournoi.date_fin.isoformat() if isinstance(tournoi.date_fin, datetime.date) else tournoi.date_fin,
-            'joueurs': [joueur.index for joueur in tournoi.joueurs]
-        }
-    
     def convertir_dict_vers_tournoi(self, data):
-        tournoi = Tournoi(data['index'], data['nom'],
-                          datetime.datetime.strptime(data['date_debut'], '%Y-%m-%d').date(),
-                          datetime.datetime.strptime(data['date_fin'], '%Y-%m-%d').date())
+        index = data['index']
+        nom = data['nom']
+        date_debut = datetime.datetime.strptime(data['date_debut'], '%Y-%m-%d').date()
+        date_fin = datetime.datetime.strptime(data['date_fin'], '%Y-%m-%d').date()
+        nb_max_joueurs = data.get('nb_max_joueurs', 0)
+        nb_rondes = data.get('nb_rondes', 0)
+        type_tournoi = data.get('type_tournoi', '')
+        joueurs = []  # Assurez-vous de récupérer correctement les joueurs depuis les données du fichier JSON
+        tournoi = Tournoi(index, nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi, joueurs)
         return tournoi
+
     def convertir_tournoi_vers_dict(self, tournoi):
-        joueurs_noms = [joueur.nom for joueur in tournoi.joueurs]
-        nombre_inscrits = len(tournoi.joueurs)
-        
+        joueurs_index = [joueur.index for joueur in tournoi.joueurs]  # Récupérer les index des joueurs
         return {
             'index': tournoi.index,
             'nom': tournoi.nom,
             'date_debut': tournoi.date_debut.isoformat() if isinstance(tournoi.date_debut, datetime.date) else tournoi.date_debut,
             'date_fin': tournoi.date_fin.isoformat() if isinstance(tournoi.date_fin, datetime.date) else tournoi.date_fin,
-            'joueurs': joueurs_noms,
-            'nombre_inscrits': nombre_inscrits
-        }
+            'joueurs': joueurs_index,  # Stocker les index des joueurs
+            'nombre_inscrits': len(tournoi.joueurs)
+    }
+
