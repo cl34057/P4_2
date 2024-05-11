@@ -15,21 +15,37 @@ def menu_tournoi():
                 else:
                     print("Échec de la création du tournoi. Veuillez réessayer.")
         elif choix == "2":
-            tournoi_vue.modifier_tournoi()
+            while True:
+                print("===== Menu Modifier tournoi =====")
+                print("a. Modification d'un tournoi")
+                print("b. Ajouter un joueur au tournoi")
+                print("c. Supprimer un joueur du tournoi")
+                print("d. Retour au menu principal")
+                sous_choix = input("Entrez votre choix : ")
+                
+                if sous_choix == "a":
+                    tournoi_vue.modifier_tournoi()
+                elif sous_choix == "b":
+                    index_tournoi = tournoi_vue.saisir_index_tournoi()
+                    tournoi_vue.saisir_joueurs_participants(index_tournoi)
+                    print("Joueur ajouté au tournoi avec succès.")
+                elif sous_choix == "c":
+                    index_tournoi = tournoi_vue.saisir_index_tournoi()
+                    tournoi_vue.supprimer_joueur_tournoi(index_tournoi)
+                    print("Joueur supprimé du tournoi avec succès.")
+                elif sous_choix == "d":
+                    break
+                else:
+                    print("Choix invalide. Veuillez réessayer.")
         elif choix == "3":
             tournoi_vue.supprimer_tournoi()
         elif choix == "4":
             tournoi_vue.afficher_liste_tournois()
-        elif choix == "5":
-            index_tournoi = tournoi_vue.saisir_index_tournoi()
-            tournoi_vue.saisir_joueurs_participants(index_tournoi)
+        
         elif choix == "6":
             tournoi_vue.afficher_details_tournoi()
+        
         elif choix == "7":
-            index_tournoi = tournoi_vue.saisir_index_tournoi()
-            tournoi_vue.supprimer_joueur_tournoi(index_tournoi)
-            print("Joueur supprimé du tournoi avec succès.")
-        elif choix == "8":
             print("Merci d'avoir utilisé le gestionnaire de tournois. À bientôt !")
             break
         else:

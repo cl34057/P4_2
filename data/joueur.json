@@ -8,22 +8,22 @@
     },
     {
         "index": 2,
-        "nom": "rere",
+        "nom": "riri",
         "prenom": "rase",
         "date_naissance": "1987-12-12",
-        "elo": 3000
+        "elo": "1650"
     },
     {
         "index": 3,
-        "nom": "sode",
-        "prenom": "ref",
-        "date_naissance": "1988-01-01",
-        "elo": 1100
+        "nom": "remi",
+        "prenom": "joseph",
+        "date_naissance": "1964-08-07",
+        "elo": 2900
     },
     {
         "index": 4,
         "nom": "raza",
-        "prenom": "rty",
+        "prenom": "rety",
         "date_naissance": "1956-09-07",
         "elo": 1300
     },
@@ -50,37 +50,44 @@
     },
     {
         "index": 8,
-        "nom": "jerome",
-        "prenom": "christian",
-        "date_naissance": "1989-02-26",
-        "elo": 2000
+        "nom": "yen",
+        "prenom": "su",
+        "date_naissance": "2005-05-07",
+        "elo": 1989
     },
     {
         "index": 9,
         "nom": "justin",
-        "prenom": "raoul",
-        "date_naissance": "1997-02-24",
-        "elo": 2200
-    },
-    {
-        "index": 10,
-        "nom": "ilot",
-        "prenom": "yan",
-        "date_naissance": "1986-06-07",
-        "elo": 2600
-    },
-    {
-        "index": 11,
-        "nom": "pedro",
-        "prenom": "yvan",
-        "date_naissance": "1998-06-07",
+        "prenom": "franco",
+        "date_naissance": "2000-12-12",
         "elo": 3000
     },
     {
+        "index": 10,
+        "nom": "ramaro",
+        "prenom": "jessy",
+        "date_naissance": "1996-03-05",
+        "elo": 1750
+    },
+    {
+        "index": 11,
+        "nom": "sacristo",
+        "prenom": "korea",
+        "date_naissance": "1998-05-26",
+        "elo": 2900
+    },
+    {
         "index": 12,
-        "nom": "medi",
-        "prenom": "orpi",
-        "date_naissance": "2014-05-03",
-        "elo": 1900
+        "nom": "corbaro",
+        "prenom": "stanislas",
+        "date_naissance": "1996-06-07",
+        "elo": 1500
+    },
+    {
+        "index": 13,
+        "nom": "jessy",
+        "prenom": "mickael",
+        "date_naissance": "1996-03-08",
+        "elo": 1200
     }
 ]

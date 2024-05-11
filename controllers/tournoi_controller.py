@@ -1,5 +1,4 @@
 from models.tournoi_model import TournoiManager
-
 class TournoiController:
     def __init__(self):
         self.tournoi_manager = TournoiManager()
@@ -7,8 +6,9 @@ class TournoiController:
     def ajouter_tournoi(self, nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi):
         return self.tournoi_manager.ajouter_tournoi(nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi)
 
-    def modifier_tournoi(self, index, nom, date_debut, date_fin):
-        self.tournoi_manager.modifier_tournoi(index, nom, date_debut, date_fin)
+    def modifier_tournoi(self, index, nom=None, date_debut=None, date_fin=None, nb_max_joueurs=None, nb_rondes=None, type_tournoi=None):
+        self.tournoi_manager.modifier_tournoi(index, nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi)
+
 
     def supprimer_tournoi(self, index):
         self.tournoi_manager.supprimer_tournoi(index)
@@ -25,3 +25,4 @@ class TournoiController:
 
     def supprimer_joueur_du_tournoi(self, tournoi_index, joueur):
         self.tournoi_manager.supprimer_joueur_du_tournoi(tournoi_index, joueur)
+

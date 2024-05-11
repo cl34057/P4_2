@@ -14,10 +14,8 @@ class TournoiVue:
         print("2. Modifier un tournoi")
         print("3. Supprimer un tournoi")
         print("4. Afficher la liste des tournois")
-        print("5. Ajouter un joueur au tournoi")
         print("6. Afficher les détails d'un tournoi")
-        print("7. Supprimer un joueur du tournoi")
-        print("8. Quitter")
+        print("7. Quitter")
 
     def saisir_tournoi(self):
         while True:
@@ -39,11 +37,60 @@ class TournoiVue:
                 return nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi
             except ValueError:
                 print("Format de date invalide. Veuillez entrer la date au format YYYY-MM-DD.")
-
+    
+    def valider_format_date(date_str):
+        try:
+            datetime.datetime.strptime(date_str, '%Y-%m-%d')
+            return True
+        except ValueError:
+            return False
+        
     def modifier_tournoi(self):
         index = self.saisir_index_tournoi()
-        nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi = self.saisir_tournoi()
-        self.tournoi_controller.modifier_tournoi(index, nom, date_debut, date_fin)
+        tournoi = self.tournoi_controller.tournoi_manager.tournois[index - 1]
+
+        print("===== Modifier le tournoi =====")
+        print(f"Nom du tournoi : {tournoi.nom}")
+        print(f"Date de début : {tournoi.date_debut}")
+        print(f"Date de fin : {tournoi.date_fin}")
+        print(f"Nombre maximal de joueurs : {tournoi.nb_max_joueurs}")
+        print(f"Nombre de rondes : {tournoi.nb_rondes}")
+        print(f"Type de tournoi : {tournoi.type_tournoi}")
+
+        choix_modification = input("Voulez-vous modifier ce tournoi ? (o/n) : ")
+
+        if choix_modification.lower() == 'o':
+            # Demander à l'utilisateur de saisir de nouvelles valeurs pour les attributs existants
+            nom = input(f"Nouveau nom du tournoi ({tournoi.nom}) : ") or tournoi.nom
+            date_debut = input(f"Nouvelle date de début ({tournoi.date_debut}) : ") or tournoi.date_debut
+            date_fin = input(f"Nouvelle date de fin ({tournoi.date_fin}) : ") or tournoi.date_fin
+
+            # Demander à l'utilisateur de saisir de nouvelles valeurs pour les attributs supplémentaires
+            nb_max_joueurs = input(f"Nouveau nombre maximal de joueurs ({tournoi.nb_max_joueurs}) : ") or tournoi.nb_max_joueurs
+            nb_rondes = input(f"Nouveau nombre de rondes ({tournoi.nb_rondes}) : ") or tournoi.nb_rondes
+            type_tournoi = input(f"Nouveau type de tournoi ({tournoi.type_tournoi}) : ") or tournoi.type_tournoi
+
+            # Afficher les modifications proposées
+            print("Modifications proposées :")
+            print(f"Nom du tournoi : {nom}")
+            print(f"Date de début : {date_debut}")
+            print(f"Date de fin : {date_fin}")
+            print(f"Nombre maximal de joueurs : {nb_max_joueurs}")
+            print(f"Nombre de rondes : {nb_rondes}")
+            print(f"Type de tournoi : {type_tournoi}")
+
+            # Confirmer les modifications avant de les enregistrer définitivement
+            confirmation = input("Confirmez-vous ces modifications ? (o/n) : ")
+            if confirmation.lower() == 'o':
+                self.tournoi_controller.modifier_tournoi(index, nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi)
+                print("Tournoi modifié avec succès.")
+            else:
+                print("Modification annulée.")
+        else:
+            print("Aucune modification effectuée.")
+
+                        
+
 
     def supprimer_tournoi(self):
         index = self.saisir_index_tournoi()
@@ -53,20 +100,18 @@ class TournoiVue:
         tournois = self.tournoi_controller.tournoi_manager.tournois
         print("===== Liste des Tournois =====")
         for tournoi in tournois:
-            print(f"Index: {tournois.index(tournoi) + 1}, Nom: {tournoi.nom}, Date de début: {tournoi.date_debut}, Date de fin: {tournoi.date_fin}")
-
+            print(f"Index: {tournois.index(tournoi) + 1}, Nom: {tournoi.nom}, Date de début: {tournoi.date_debut}, Date de fin: {tournoi.date_fin}, Nombre d'inscrits: {tournoi.nombre_inscrits}")
+ 
     def saisir_index_tournoi(self):
-        while True:
+         while True:
             try:
                 index = int(input("Entrez l'index du tournoi : "))
-                if index < 1 or index > len(self.tournoi_controller.tournoi_manager.tournois):
-                    print("Index invalide. Veuillez entrer un index valide.")
-                    continue
-                else:
+                if 1 <= index <= len(self.tournoi_controller.tournoi_manager.tournois):
                     return index
+                else:
+                    print("Index invalide. Veuillez entrer un index valide.")
             except ValueError:
                 print("Veuillez entrer un nombre entier.")
-
     def saisir_joueurs_participants(self, tournoi_index):
         tournoi = self.tournoi_controller.tournoi_manager.tournois[tournoi_index - 1]
         joueurs_deja_inscrits = tournoi.joueurs
@@ -132,10 +177,11 @@ class TournoiVue:
         print(f"Nombre maximum de joueurs: {tournoi.nb_max_joueurs}")
         print(f"Nombre de rondes: {tournoi.nb_rondes}")
         print(f"Type de tournoi: {tournoi.type_tournoi}")
+        print(f"Nombre d'inscrits: {tournoi.nombre_inscrits}")  # Ajout de cette ligne pour afficher le nombre d'inscrits
         print("Liste des joueurs inscrits:")
         for joueur in tournoi.joueurs:
             print(joueur.nom, joueur.prenom)  # Affichez les noms et prénoms des joueurs
-
+            
     def supprimer_joueur_tournoi(self, tournoi_index):
     # Récupérer le tournoi à partir du gestionnaire de tournoi en utilisant l'index fourni en paramètre
         tournoi = self.tournoi_controller.tournoi_manager.tournois[tournoi_index - 1]

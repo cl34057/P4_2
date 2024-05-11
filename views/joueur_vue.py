@@ -58,10 +58,28 @@ class JoueurVue:
             return joueur
 
     def modifier_joueur(self):
+        
         index = self.saisir_index_joueur()
-        nom, prenom, date_naissance, elo = self.saisir_joueur_details()
-        self.joueur_controller.modifier_joueur(index, nom, prenom, date_naissance, elo)
+        joueur = self.joueur_controller.joueur_manager.joueurs[index - 1]
 
+        print("===== Modifier le joueur =====")
+        print(f"Nom : {joueur.nom}")
+        print(f"Prénom : {joueur.prenom}")
+        print(f"Date de naissance : {joueur.date_naissance}")
+        print(f"Elo : {joueur.elo}")
+
+        choix_modification = input("Voulez-vous modifier ce joueur ? (o/n) : ")
+
+        if choix_modification.lower() == 'o':
+            nom = input(f"Nouveau nom ({joueur.nom}) : ") or joueur.nom
+            prenom = input(f"Nouveau prénom ({joueur.prenom}) : ") or joueur.prenom
+            date_naissance = input(f"Nouvelle date de naissance ({joueur.date_naissance}) : ") or joueur.date_naissance
+            elo = input(f"Nouvel elo ({joueur.elo}) : ") or joueur.elo
+
+            self.joueur_controller.modifier_joueur(index, nom, prenom, date_naissance, elo)
+            print("Joueur modifié avec succès.")
+        else:
+            print("Aucune modification effectuée.")
     def afficher_joueur(self, joueur):
         print("===== Affichage des détails d'un joueur =====")
         print("Nom :", joueur.nom)  # Afficher le nom
@@ -73,7 +91,7 @@ class JoueurVue:
         joueurs = self.joueur_controller.joueur_manager.joueurs
         print("===== Liste des Joueurs =====")
         for joueur in joueurs:
-            print(f"Index: {joueurs.index(joueur) + 1}, Nom: {joueur.nom}, Prénom: {joueur.prenom}, Elo: {joueur.elo}")
+            print(f"Index: {joueurs.index(joueur) + 1}, Nom: {joueur.nom}, Prénom: {joueur.prenom}, Date_naissance: {joueur.date_naissance}, Elo: {joueur.elo}")
 
     def saisir_index_joueur(self):
         while True:

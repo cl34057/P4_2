@@ -11,7 +11,7 @@ class Joueur:
         self.elo = elo
 
 class JoueurManager:
-    MAX_JOUEURS = 100
+    MAX_JOUEURS = 1000
     FICHIER_JSON = "data/joueur.json"
 
     def __init__(self):

@@ -13,19 +13,23 @@ class Tournoi:
         self.nb_rondes = nb_rondes
         self.type_tournoi = type_tournoi
         self.joueurs = joueurs if joueurs is not None else []
+        self.nombre_inscrits = len(self.joueurs)  # Ajout de l'attribut nombre_inscrits
+
 
     def ajouter_joueurs(self, joueurs):
         self.joueurs.extend(joueurs)
+        self.nombre_inscrits = len(self.joueurs)  # Mettre à jour le nombre d'inscrits
 
     def supprimer_joueur(self, joueur):
         if joueur in self.joueurs:
             self.joueurs.remove(joueur)
+            self.nombre_inscrits = len(self.joueurs)  # Mettre à jour le nombre d'inscrits
             print(f"Le joueur {joueur.nom} a été supprimé du tournoi {self.nom}.")
         else:
             print(f"Le joueur {joueur.nom} n'est pas inscrit dans ce tournoi.")
 
 class TournoiManager:
-    MAX_TOURNOIS = 5
+    MAX_TOURNOIS = 15
     FICHIER_JSON = "data/tournoi.json"
 
     def __init__(self):
@@ -54,12 +58,21 @@ class TournoiManager:
             print("Limite de tournois atteinte. Impossible d'ajouter un nouveau tournoi.")
             return False
 
-    def modifier_tournoi(self, index, nom, date_debut, date_fin):
-        self.tournois[index - 1].nom = nom
-        self.tournois[index - 1].date_debut = date_debut
-        self.tournois[index - 1].date_fin = date_fin
+    def modifier_tournoi(self, index, nom=None, date_debut=None, date_fin=None, nb_max_joueurs=None, nb_rondes=None, type_tournoi=None):
+        tournoi = self.tournois[index - 1]
+        if nom is not None:
+            tournoi.nom = nom
+        if date_debut is not None:
+            tournoi.date_debut = date_debut
+        if date_fin is not None:
+            tournoi.date_fin = date_fin
+        if nb_max_joueurs is not None:
+            tournoi.nb_max_joueurs = nb_max_joueurs
+        if nb_rondes is not None:
+            tournoi.nb_rondes = nb_rondes
+        if type_tournoi is not None:
+            tournoi.type_tournoi = type_tournoi
         self.sauvegarder_tournois()
-
     def supprimer_tournoi(self, index):
         del self.tournois[index - 1]
         self.sauvegarder_tournois()
@@ -67,11 +80,13 @@ class TournoiManager:
     def supprimer_joueur_du_tournoi(self, tournoi_index, joueur):
         tournoi = self.tournois[tournoi_index - 1]
         tournoi.supprimer_joueur(joueur)
+        tournoi.nombre_inscrits -= 1  # Mettre à jour le nombre d'inscrits
         self.sauvegarder_tournois()
 
     def ajouter_joueurs_au_tournoi(self, tournoi_index, joueurs):
         tournoi = self.tournois[tournoi_index - 1]
         tournoi.ajouter_joueurs(joueurs)
+        tournoi.nombre_inscrits += len(joueurs)  # Mettre à jour le nombre d'inscrits
         self.sauvegarder_tournois()
 
     def convertir_dict_vers_tournoi(self, data):
