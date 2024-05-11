@@ -7,9 +7,13 @@ def menu_tournoi():
         choix = input("Entrez votre choix : ")
 
         if choix == "1":
-            nom, date_debut, date_fin = tournoi_vue.saisir_tournoi()
-            tournoi_vue.tournoi_controller.ajouter_tournoi(nom, date_debut, date_fin)
-            print("Tournoi créé avec succès.")
+            tournoi_info = tournoi_vue.saisir_tournoi()
+            if tournoi_info is not None:
+                nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi = tournoi_info
+                if tournoi_vue.tournoi_controller.ajouter_tournoi(nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi):
+                    print("Tournoi créé avec succès.")
+                else:
+                    print("Échec de la création du tournoi. Veuillez réessayer.")
         elif choix == "2":
             tournoi_vue.modifier_tournoi()
         elif choix == "3":
@@ -20,6 +24,13 @@ def menu_tournoi():
             index_tournoi = tournoi_vue.saisir_index_tournoi()
             tournoi_vue.saisir_joueurs_participants(index_tournoi)
         elif choix == "6":
+            tournoi_vue.afficher_details_tournoi()
+        elif choix == "7":
+            index_tournoi = tournoi_vue.saisir_index_tournoi()
+            tournoi_vue.supprimer_joueur_tournoi(index_tournoi)
+            print("Joueur supprimé du tournoi avec succès.")
+        elif choix == "8":
+            print("Merci d'avoir utilisé le gestionnaire de tournois. À bientôt !")
             break
         else:
             print("Choix invalide. Veuillez réessayer.")

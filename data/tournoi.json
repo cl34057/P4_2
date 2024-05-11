@@ -1,0 +1,50 @@
+[
+    {
+        "index": 1,
+        "nom": "Tournoi d'Echecs",
+        "date_debut": "2024-03-25",
+        "date_fin": "2024-03-28",
+        "joueurs": [
+            5,
+            8,
+            2
+        ],
+        "nombre_inscrits": 3
+    },
+    {
+        "index": 2,
+        "nom": "Tournoi de Noel",
+        "date_debut": "2024-12-21",
+        "date_fin": "2024-12-29",
+        "joueurs": [],
+        "nombre_inscrits": 0
+    },
+    {
+        "index": 3,
+        "nom": "Ete",
+        "date_debut": "2024-08-26",
+        "date_fin": "2024-08-30",
+        "joueurs": [],
+        "nombre_inscrits": 0
+    },
+    {
+        "index": 4,
+        "nom": "zombi",
+        "date_debut": "2024-06-06",
+        "date_fin": "2024-06-12",
+        "joueurs": [],
+        "nombre_inscrits": 0
+    },
+    {
+        "index": 5,
+        "nom": "charlot",
+        "date_debut": "2024-07-23",
+        "date_fin": "2024-07-29",
+        "joueurs": [
+            6,
+            1,
+            7
+        ],
+        "nombre_inscrits": 3
+    }
+]
