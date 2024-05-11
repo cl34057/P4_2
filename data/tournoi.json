@@ -16,8 +16,12 @@
         "nom": "Tournoi de Noel",
         "date_debut": "2024-12-21",
         "date_fin": "2024-12-29",
-        "joueurs": [],
-        "nombre_inscrits": 0
+        "joueurs": [
+            1,
+            3,
+            5
+        ],
+        "nombre_inscrits": 3
     },
     {
         "index": 3,
