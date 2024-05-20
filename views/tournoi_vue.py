@@ -17,8 +17,8 @@ class TournoiVue:
         print("2. Modifier un tournoi")
         print("3. Supprimer un tournoi")
         print("4. Afficher la liste des tournois")
-        print("6. Afficher les détails d'un tournoi")
-        print("7. Quitter")
+        print("5. Afficher les détails d'un tournoi")
+        print("6. Retour")
 
     def saisir_tournoi(self):
         """
@@ -296,4 +296,4 @@ class TournoiVue:
 
 if __name__ == "__main__":
     tournoi_vue = TournoiVue()
-    tournoi_vue.menu_tournoi()
+   

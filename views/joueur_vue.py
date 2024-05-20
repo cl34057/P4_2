@@ -2,10 +2,16 @@ from models.joueur_model import Joueur, JoueurManager
 from controllers.joueur_controller import JoueurController
 import datetime
 from config import MAX_JOUEURS
-class JoueurVue:
-    def __init__(self):
-        self.joueur_controller = JoueurController()
 
+
+
+
+class JoueurVue:
+    #changez l'import de gestion_joueur pour une injection de dépendance (au lieu de from gestion_joueur import gestion_joueur) ):
+    def __init__(self, gestion_joueur):
+        self.gestion_joueur = gestion_joueur  # Attribuez la fonction à un attribut de l'objet
+        self.joueur_controller = JoueurController()
+        
     def afficher_menu(self):
         print("===== Menu Joueur =====")
         print("1. Ajouter un joueur")
@@ -13,27 +19,36 @@ class JoueurVue:
         print("3. Supprimer un joueur")
         print("4. Afficher la liste des joueurs")
         print("5. Afficher les détails d'un joueur")
-        print("6. Quitter")
+        print("6. Retour")
+
+
+
+
 
     def saisir_joueur(self):
-        if len(self.joueur_controller.joueur_manager.joueurs) >= MAX_JOUEURS:
-            print("Nombre maximal de joueurs atteint.")
-            return None
         while True:
-            nom = input("Nom du joueur : ")
-            if not nom.isalpha():
-                print("Le nom doit contenir uniquement des lettres.")
-                continue
-            
-            prenom = input("Prénom du joueur : ")
-            if not prenom.isalpha():
-                print("Le prénom doit contenir uniquement des lettres.")
-                continue
+            if len(self.joueur_controller.joueur_manager.joueurs) >= MAX_JOUEURS:
+                print("Nombre maximal de joueurs atteint.")
+                return None
             
             while True:
-                date_naissance = input("Date de naissance du joueur (format YYYY-MM-DD) : ")
+                nom = input("Nom du joueur : ")
+                if not nom.isalpha():
+                    print("Le nom doit contenir uniquement des lettres.")
+                    continue
+                break
+            
+            while True:
+                prenom = input("Prénom du joueur : ")
+                if not prenom.isalpha():
+                    print("Le prénom doit contenir uniquement des lettres.")
+                    continue
+                break
+            
+            while True:
+                date_naissance_str = input("Date de naissance du joueur (format YYYY-MM-DD) : ")
                 try:
-                    datetime.datetime.strptime(date_naissance, '%Y-%m-%d')
+                    date_naissance = datetime.datetime.strptime(date_naissance_str, '%Y-%m-%d').date()
                     break
                 except ValueError:
                     print("Format de date invalide. Veuillez entrer la date au format YYYY-MM-DD.")
@@ -49,13 +64,46 @@ class JoueurVue:
                     continue
                 else:
                     break
-                    
-            # Obtenez l'index du joueur à partir du gestionnaire de joueur
-            index = len(self.joueur_controller.joueur_manager.joueurs) + 1
-            
-            # Créer un objet Joueur avec les informations saisies, y compris l'index
-            joueur = Joueur(index, nom, prenom, date_naissance, int(elo))
-            return joueur
+                
+            # Vérifier si le joueur existe déjà
+            joueur_existant = self.joueur_controller.joueur_manager.trouver_joueur_par_details(nom, prenom, date_naissance)
+            if joueur_existant:
+                choix = input("CE JOUEUR EXISTE DÉJA. Voulez-vous ajouter un autre joueur ? (o/n) : ")
+                if choix.lower() == 'o':
+                    continue  # Revenir à la saisie du nouveau joueur
+                elif choix.lower() == 'n':
+                    # Revenir au menu joueur
+                    print("Retour au menu joueur.")
+                    self.gestion_joueur()  # Appeler la fonction gestion_joueur pour revenir au menu joueur
+                    return  # Appeler la fonction gestion_joueur pour revenir au menu joueur
+                else:
+                    print("Choix invalide. Veuillez répondre par 'o' ou 'n'.")
+                    continue
+            elif choix.lower() == '6':
+                # Si l'utilisateur choisit l'option 6, retournez au menu principal en appelant la fonction main_menu
+                print("Retour au menu principal.")
+                main_menu()
+                return
+            else:
+                # Ajouter le joueur s'il n'existe pas déjà
+                index = len(self.joueur_controller.joueur_manager.joueurs) + 1
+                joueur = Joueur(index, nom, prenom, date_naissance, int(elo))
+                self.joueur_controller.ajouter_joueur(joueur.nom, joueur.prenom, joueur.date_naissance, joueur.elo)
+                
+                # Demander si l'utilisateur veut ajouter un autre joueur
+                choix = input("Voulez-vous ajouter un autre joueur ? (o/n) : ")
+                if choix.lower() == 'o':
+                    continue  # Revenir à la saisie du nouveau joueur
+                elif choix.lower() == 'n':
+                    # Revenir au menu joueur
+                    print("Retour au menu joueur.")
+                    self.gestion_joueur()  # Appeler la fonction gestion_joueur pour revenir au menu joueur
+                    return 
+                else:
+                    print("Choix invalide. Veuillez répondre par 'o' ou 'n'.")
+                    continue
+
+
 
     def modifier_joueur(self):
         

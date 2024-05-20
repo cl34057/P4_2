@@ -89,5 +89,75 @@
         "prenom": "mickael",
         "date_naissance": "1996-03-08",
         "elo": 1200
+    },
+    {
+        "index": 14,
+        "nom": "Clement",
+        "prenom": "georgia",
+        "date_naissance": "2000-01-02",
+        "elo": 1800
+    },
+    {
+        "index": 15,
+        "nom": "jamesy",
+        "prenom": "cameron",
+        "date_naissance": "1998-06-27",
+        "elo": 1200
+    },
+    {
+        "index": 16,
+        "nom": "tii",
+        "prenom": "holy",
+        "date_naissance": "1992-02-03",
+        "elo": 1100
+    },
+    {
+        "index": 17,
+        "nom": "joma",
+        "prenom": "popi",
+        "date_naissance": "1997-06-03",
+        "elo": 1500
+    },
+    {
+        "index": 18,
+        "nom": "urli",
+        "prenom": "pala",
+        "date_naissance": "1997-04-29",
+        "elo": 2200
+    },
+    {
+        "index": 19,
+        "nom": "titi",
+        "prenom": "mole",
+        "date_naissance": "2001-06-02",
+        "elo": 2000
+    },
+    {
+        "index": 20,
+        "nom": "picard",
+        "prenom": "jeremy",
+        "date_naissance": "2008-06-07",
+        "elo": "1100"
+    },
+    {
+        "index": 21,
+        "nom": "polo",
+        "prenom": "rams",
+        "date_naissance": "2015-06-07",
+        "elo": 1500
+    },
+    {
+        "index": 22,
+        "nom": "jojo",
+        "prenom": "marius",
+        "date_naissance": "1980-10-24",
+        "elo": 2750
+    },
+    {
+        "index": 23,
+        "nom": "remi",
+        "prenom": "rase",
+        "date_naissance": "1987-12-12",
+        "elo": 1650
     }
 ]

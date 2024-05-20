@@ -1,6 +1,6 @@
 from views.tournoi_vue import TournoiVue
 
-def menu_tournoi():
+def gestion_tournoi():
     tournoi_vue = TournoiVue()
     while True:
         tournoi_vue.afficher_menu()
@@ -42,14 +42,14 @@ def menu_tournoi():
         elif choix == "4":
             tournoi_vue.afficher_liste_tournois()
         
-        elif choix == "6":
+        elif choix == "5":
             tournoi_vue.afficher_details_tournoi()
         
-        elif choix == "7":
+        elif choix == "6":
             print("Merci d'avoir utilisé le gestionnaire de tournois. À bientôt !")
             break
         else:
             print("Choix invalide. Veuillez réessayer.")
 
 if __name__ == "__main__":
-    menu_tournoi()
+    gestion_tournoi()

@@ -1,10 +1,10 @@
 import json
 import os
-import datetime
 import random
 from typing import List
 from models.joueur_model import Joueur
 import datetime
+
 
 class Tournoi:
     def __init__(self, index, nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi, joueurs=None):
@@ -18,7 +18,34 @@ class Tournoi:
         self.joueurs = joueurs if joueurs is not None else []
         self.nombre_inscrits = len(self.joueurs)  # Ajout de l'attribut nombre_inscrits
         self.tours = []  # Liste pour stocker les tours
+        self.nb_tours = 0  # Initialisation de l'attribut pour compter le nombre de tours
 
+
+    def generer_donnees_json(self):
+        # Générer les données à sauvegarder dans le fichier JSON
+        data = {
+            "nom": self.nom,
+            "date_debut": str(self.date_debut),
+            "date_fin": str(self.date_fin),
+            "nombre_joueurs_inscrits": self.nombre_inscrits,
+            "nombre_rondes": self.nb_rondes,
+            "rondes": [ronde.__dict__ for ronde in self.tours]
+        }
+        return data
+
+    def creer_fichier_json(self):
+        # Créer un fichier JSON pour le tournoi et y sauvegarder les données
+        filename = f"data/tournaments/{self.nom}.json"
+        with open(filename, "w") as file:
+            data = self.generer_donnees_json()
+            json.dump(data, file, indent=4)
+            
+    def mise_a_jour_fichier_json(self):
+        # Implémentez la logique pour générer et mettre à jour les fichiers JSON pour chaque tournoi
+        if not os.path.exists("data/tournaments"):
+            os.makedirs("data/tournaments")
+        self.creer_fichier_json()
+            
     def ajouter_joueurs(self, joueurs):
         self.joueurs.extend(joueurs)
         self.nombre_inscrits = len(self.joueurs)  # Mettre à jour le nombre d'inscrits
@@ -52,12 +79,18 @@ class Tournoi:
         if len(self.tours) >= self.nb_rondes:
             print("Impossible de créer un nouveau tour. Le nombre maximum de tours est atteint.")
             return
-            # Initialisation de l'attribut pour compter le nombre de tours
+
+        # Initialisation de l'attribut pour compter le nombre de tours
         self.nb_tours = len(self.tours)
+        
         # Créer un nouveau tour et l'ajouter à la liste des tours du tournoi
-        tour = Tour(self.nb_tours + 1, datetime.now(), "en cours")
+        tour = Tour(self.nb_tours + 1, datetime.datetime.now(), "en cours")
         self.tours.append(tour)
         self.nb_tours += 1
+        
+        # Générer et mettre à jour les fichiers JSON pour chaque tournoi avec les informations appropriées
+        self.mise_a_jour_fichier_json()
+
   
 class Tour:
     def __init__(self, numero, date, statut):
@@ -131,9 +164,7 @@ class Tour:
         self.rondes.append(ronde)
 
 
-    def generer_paires(self, joueurs):
-        # Implémentez ici la génération des paires de joueurs pour ce tour
-        pass
+    
 class TournoiManager:
     MAX_TOURNOIS = 15
     FICHIER_JSON = "data/tournoi.json"
@@ -204,10 +235,48 @@ class TournoiManager:
         nb_max_joueurs = data.get('nb_max_joueurs', 0)
         nb_rondes = data.get('nb_rondes', 0)
         type_tournoi = data.get('type_tournoi', '')
-        joueurs = []  # Assurez-vous de récupérer correctement les joueurs depuis les données du fichier JSON
+        joueurs_index = data.get('joueurs', [])  # Récupérer les index des joueurs
+        joueurs = self.charger_joueurs_par_index(joueurs_index)  # Charger les joueurs associés à leurs index
         tournoi = Tournoi(index, nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi, joueurs)
         return tournoi
+    
+    def charger_joueurs_par_index(self, joueurs_index):
+        joueurs = []
+        joueur_trouve = False  # Variable pour suivre si un joueur a été trouvé
 
+        # Charger les joueurs associés à leurs index à partir du fichier JSON des joueurs
+        if os.path.exists("data/joueur.json"):
+            with open("data/joueur.json", "r") as file:
+                all_players = json.load(file)
+                for index in joueurs_index:
+                    joueur_trouve = False  # Réinitialiser la variable pour chaque itération
+                    for player_data in all_players:
+                        if player_data['index'] == index:
+                            try:
+                                # Convertir la date de naissance en objet datetime
+                                date_naissance = datetime.datetime.strptime(player_data['date_naissance'], '%Y-%m-%d').date()
+                            except ValueError:
+                                print(f"La date de naissance pour le joueur avec l'index {index} n'est pas au bon format.")
+                                continue  # Passer à l'itération suivante si le format de date est incorrect
+                                
+                            joueur = Joueur(
+                                index=index,
+                                nom=player_data['nom'],
+                                prenom=player_data['prenom'],
+                                date_naissance=date_naissance,
+                                elo=player_data['elo']
+                            )
+                            joueurs.append(joueur)
+                            joueur_trouve = True  # Définir la variable à True si le joueur est trouvé
+                            break  # Sortir de la boucle interne une fois que le joueur est trouvé
+                    if not joueur_trouve:
+                        print(f"Les données pour le joueur avec l'index {index} n'ont pas été trouvées.")
+        else:
+            print("Le fichier des joueurs n'existe pas.")
+
+        return joueurs
+
+        
     def convertir_tournoi_vers_dict(self, tournoi):
         joueurs_index = [joueur.index for joueur in tournoi.joueurs]  # Récupérer les index des joueurs
         return {
@@ -218,3 +287,8 @@ class TournoiManager:
             'joueurs': joueurs_index,  # Stocker les index des joueurs
             'nombre_inscrits': len(tournoi.joueurs)
         }
+    def trouver_tournoi_par_index(self, index):
+        for tournoi in self.tournois:
+            if tournoi.index == index:
+                return tournoi
+        return None

@@ -1,15 +1,19 @@
 from views.joueur_vue import JoueurVue
 
-def main():
-    joueur_vue = JoueurVue()
+
+def gestion_joueur():
+    from main_menu import main_menu # Importation locale pour éviter la circularité
+    joueur_vue = JoueurVue(gestion_joueur)
     while True:
         joueur_vue.afficher_menu()
         choix = input("Entrez votre choix : ")
 
         if choix == "1":
-             if len(joueur_vue.joueur_controller.joueur_manager.joueurs) >= joueur_vue.joueur_controller.joueur_manager.MAX_JOUEURS:
+            if joueur_vue.saisir_joueur() is True:
+                continue
+            elif len(joueur_vue.joueur_controller.joueur_manager.joueurs) >= joueur_vue.joueur_controller.joueur_manager.MAX_JOUEURS:
                 print("Le nombre maximal de joueurs est déjà atteint.")
-             else:
+            else:
                 joueur = joueur_vue.saisir_joueur()
                 joueur_vue.joueur_controller.ajouter_joueur(joueur.nom, joueur.prenom, joueur.date_naissance, joueur.elo)
         elif choix == "2":
@@ -20,10 +24,14 @@ def main():
             joueur_vue.afficher_liste_joueurs()
         elif choix == "5":
             joueur_vue.afficher_details_joueur()
-        elif choix == "6":
-            break
+        elif choix == "6": 
+            print("retour au menu principal")
+            main_menu()
+            return
         else:
             print("Choix invalide. Veuillez réessayer.")
+    return
 
 if __name__ == "__main__":
-    main()
+    gestion_joueur()
+
