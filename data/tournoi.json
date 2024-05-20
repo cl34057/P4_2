@@ -44,7 +44,13 @@
         "nom": "Volte face",
         "date_debut": "2025-01-26",
         "date_fin": "2025-01-30",
-        "joueurs": [],
-        "nombre_inscrits": 0
+        "joueurs": [
+            1,
+            2,
+            4,
+            6,
+            9
+        ],
+        "nombre_inscrits": 5
     }
 ]

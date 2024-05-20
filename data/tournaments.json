@@ -1,0 +1,52 @@
+[
+    {
+        "index": 1,
+        "nom": "Tournoi_A",
+        "date_debut": "2024-05-15",
+        "date_fin": "2024-05-20",
+        "nb_max_joueurs": 8,
+        "nb_rondes": 4,
+        "type_tournoi": "Standard",
+        "rondes": [
+            {
+                "numero": 1,
+                "matchs": [
+                    {"joueur_blanc": "Doe John", "joueur_noir": "Smith Alice", "resultat": "1-0"},
+                    {"joueur_blanc": "Brown Bob", "joueur_noir": "Taylor Emma", "resultat": "0.5-0.5"}
+                ]
+            },
+            {
+                "numero": 2,
+                "matchs": [
+                    {"joueur_blanc": "Doe John", "joueur_noir": "Taylor Emma", "resultat": "0-1"},
+                    {"joueur_blanc": "Smith Alice", "joueur_noir": "Brown Bob", "resultat": "1-0"}
+                ]
+            }
+        ]
+    },
+    {
+        "index": 2,
+        "nom": "Tournoi_B",
+        "date_debut": "2024-06-01",
+        "date_fin": "2024-06-06",
+        "nb_max_joueurs": 10,
+        "nb_rondes": 5,
+        "type_tournoi": "Rapide",
+        "rondes": [
+            {
+                "numero": 1,
+                "matchs": [
+                    {"joueur_blanc": "Doe John", "joueur_noir": "Smith Alice", "resultat": "0.5-0.5"},
+                    {"joueur_blanc": "Brown Bob", "joueur_noir": "Taylor Emma", "resultat": "0-1"}
+                ]
+            },
+            {
+                "numero": 2,
+                "matchs": [
+                    {"joueur_blanc": "Doe John", "joueur_noir": "Brown Bob", "resultat": "1-0"},
+                    {"joueur_blanc": "Smith Alice", "joueur_noir": "Taylor Emma", "resultat": "0.5-0.5"}
+                ]
+            }
+        ]
+    }
+]

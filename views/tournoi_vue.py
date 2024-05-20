@@ -5,6 +5,9 @@ from models.joueur_model import JoueurManager
 
 class TournoiVue:
     def __init__(self):
+        """
+        Initialise une instance de TournoiVue.
+        """
         self.tournoi_controller = TournoiController()
         self.joueur_manager = JoueurManager()
 
@@ -18,6 +21,12 @@ class TournoiVue:
         print("7. Quitter")
 
     def saisir_tournoi(self):
+        """
+        Permet à l'utilisateur de saisir les informations pour créer un nouveau tournoi.
+        
+        Returns:
+            tuple: Un tuple contenant les informations du tournoi (nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi).
+        """
         while True:
             nom = input("Nom du tournoi : ")
             if not re.match("^[a-zA-Z0-9 ]+$", nom):
@@ -37,8 +46,17 @@ class TournoiVue:
                 return nom, date_debut, date_fin, nb_max_joueurs, nb_rondes, type_tournoi
             except ValueError:
                 print("Format de date invalide. Veuillez entrer la date au format YYYY-MM-DD.")
-    
+    @staticmethod
     def valider_format_date(date_str):
+        """
+        Valide le format de date donné.
+
+        Args:
+            date_str (str): La chaîne de caractères représentant la date.
+
+        Returns:
+            bool: True si le format est valide, False sinon.
+        """
         try:
             datetime.datetime.strptime(date_str, '%Y-%m-%d')
             return True
@@ -177,11 +195,33 @@ class TournoiVue:
         print(f"Nombre maximum de joueurs: {tournoi.nb_max_joueurs}")
         print(f"Nombre de rondes: {tournoi.nb_rondes}")
         print(f"Type de tournoi: {tournoi.type_tournoi}")
-        print(f"Nombre d'inscrits: {tournoi.nombre_inscrits}")  # Ajout de cette ligne pour afficher le nombre d'inscrits
-        print("Liste des joueurs inscrits:")
-        for joueur in tournoi.joueurs:
-            print(joueur.nom, joueur.prenom)  # Affichez les noms et prénoms des joueurs
-            
+        print(f"Nombre d'inscrits: {tournoi.nombre_inscrits}")
+
+        print("\n===== Gestion des Tours =====")
+        print("1. Créer une ronde")
+        print("2. Appariement d'une ronde")
+        print("3. Afficher les résultats d'une ronde")
+        print("4. Afficher le classement d'une ronde")
+        print("5. Retour")
+
+        choix = input("Entrez votre choix : ")
+        if choix == "1":
+            # Appel de la méthode pour créer une ronde
+            self.creer_tour(index_tournoi)
+        elif choix == "2":
+            # Appel de la méthode pour l'appariement d'une ronde
+            self.appariement_tour(index_tournoi)
+        elif choix == "3":
+            # Appel de la méthode pour afficher les résultats d'une ronde
+            self.afficher_resultats_tour(index_tournoi)
+        elif choix == "4":
+            # Appel de la méthode pour afficher le classement d'une ronde
+            self.afficher_classement_tour(index_tournoi)
+        elif choix == "5":
+            # Retour au menu principal
+            return
+        else:
+            print("Choix invalide. Veuillez sélectionner une option valide.")
     def supprimer_joueur_tournoi(self, tournoi_index):
     # Récupérer le tournoi à partir du gestionnaire de tournoi en utilisant l'index fourni en paramètre
         tournoi = self.tournoi_controller.tournoi_manager.tournois[tournoi_index - 1]
@@ -212,8 +252,45 @@ class TournoiVue:
             except ValueError:
                 print("Veuillez entrer un nombre entier.")
 
+    
+    def creer_tour(self, index_tournoi):
+        # Cette méthode pourrait implémenter la logique de création d'une ronde,
+        # par exemple, en demandant à l'utilisateur de confirmer la création d'une nouvelle ronde.
+        # Voici un exemple de code :
+        print("===== Création d'une ronde =====")
+        confirmation = input("Confirmez-vous la création d'une nouvelle ronde ? (o/n) : ")
+        if confirmation.lower() == 'o':
+            self.tournoi_controller.creer_tour(index_tournoi)
+            print("Ronde créée avec succès.")
+        else:
+            print("Création de ronde annulée.")
 
+    def appariement_tour(self, index_tournoi):
+        # Cette méthode pourrait implémenter la logique d'appariement des joueurs pour une ronde.
+        # Cela pourrait impliquer de présenter les appariements à l'utilisateur ou de les calculer automatiquement.
+        # Voici un exemple de code :
+        print("===== Appariement des joueurs pour la ronde =====")
+        print("Calcul des appariements en cours...")
+        self.tournoi_controller.appariement_tour(index_tournoi)
+        print("Appariement des joueurs terminé.")
 
+    def afficher_resultats_tour(self, index_tournoi):
+        # Cette méthode pourrait implémenter la logique pour afficher les résultats d'une ronde.
+        # Elle pourrait interroger la classe TournoiManager pour obtenir les résultats.
+        # Voici un exemple de code :
+        print("===== Résultats de la ronde =====")
+        resultat_ronde = self.tournoi_controller.tournoi_manager.obtenir_resultats_ronde(index_tournoi)
+        for resultat in resultat_ronde:
+            print(resultat)  # Affichage des résultats, à adapter selon la structure des données.
+
+    def afficher_classement_tour(self, index_tournoi):
+        # Cette méthode pourrait implémenter la logique pour afficher le classement d'une ronde.
+        # Elle pourrait interroger la classe TournoiManager pour obtenir le classement.
+        # Voici un exemple de code :
+        print("===== Classement de la ronde =====")
+        classement_ronde = self.tournoi_controller.tournoi_manager.obtenir_classement_ronde(index_tournoi)
+        for classement in classement_ronde:
+            print(classement)  # Affichage du classement, à adapter selon la structure des données.
 
 
 
